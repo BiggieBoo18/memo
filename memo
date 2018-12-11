@@ -92,24 +92,29 @@ else
     exit 1
 fi
 
+if [ ! -z ${writefile} ]; then
+    emacs -nw ${MEMODIR}/${writefile}
+fi
+
 if [ ${showlist} = 1 ]; then
     echo "[memo list]"
     ls -1 ${MEMODIR}
-    exit 0
 fi
-
-if [ ! -z ${writefile} ]; then
-    emacs -nw ${MEMODIR}/${writefile}
-    exit 0
-fi
-
 
 res=$((${#showfiles[@]}-1))
 if [ ${res} -ge 0 ]; then
     for fname in ${showfiles[@]};
     do
-	echo ${fname}
-	cat ${MEMODIR}/${fname}
+	echo "#==============================#"
+	echo -e "\e[37;2m"
+	echo "<${fname}>"
+	if [ -e ${MEMODIR}/${fname} ]; then
+	    cat ${MEMODIR}/${fname}
+	else
+	    cat ${fname}
+	fi
+	echo -e "\e[m"
+	echo "#==============================#"
 	echo
     done
 fi
