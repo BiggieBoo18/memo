@@ -1,0 +1,100 @@
+#!/bin/bash
+
+PROGNAME=$(basename $0)
+VERSION="0.1"
+
+usage() {
+    cat << EOS
+Usage: ${PROGNAME} [OPTIONS]...
+
+Options:
+  -h,    --help
+         --version
+         --setdir
+  -s,    --show
+  -l[s], --list
+EOS
+}
+
+ROOTDIR="${HOME}/.memo"
+showlist=0
+showfiles=()
+
+if [ -z $@ ]; then
+    showlist=1;
+fi
+
+for OPT in "$@"
+do
+    case "$OPT" in
+	 '-h'|'--help')
+	     usage
+	     exit 1
+	     ;;
+         '--version')
+	     echo $VERSION
+	     exit 1
+	     ;;
+	 '--setdir')
+	     if [ -e $2 ]; then
+		 MEMODIR=$2
+		 mkdir ${ROOTDIR} 2> /dev/null
+		 echo "MEMODIR=${MEMODIR}" > ${ROOTDIR}/config
+		 shift 2
+	     else
+		 echo "$2 is not found!"
+		 exit 1
+	     fi
+	     ;;
+	 '-l'|'-ls'|'--list')
+	     shift 1
+	     showlist=1
+	     ;;
+	 '-s'|'--show')
+	     shift 1
+	     while [[ ! "$1" =~ ^-+|^$ ]]
+	     do
+		 showfiles+=("$1")
+		 shift 1
+	     done
+	     ;;
+	 '--'|'-')
+	     shift 1
+	     break
+	     ;;
+    esac
+done
+
+if [ -e ${ROOTDIR} ]; then
+    if [ -e ${ROOTDIR}"/config" ]; then
+	MEMODIR=$(cat ${ROOTDIR}"/config" | grep "MEMODIR" | sed 's/MEMODIR=//')
+	echo "Success read confing..."
+	echo "Memo directory = ${MEMODIR}"
+	echo
+    else
+	echo "Config file is not found"
+	echo "Please setting up for memo"
+	echo "memo --setdir <memo archive directory path>"
+	exit 1
+    fi
+else
+    echo "Config file is not found"
+    echo "Please setting up for memo"
+    echo "memo --setdir <memo archive directory path>"
+    exit 1
+fi
+
+if [ ${showlist} = 1 ]; then
+    echo "[memo list]"
+    ls -1 ${MEMODIR}
+    exit 0
+fi
+
+if [ ${#showfiles[@]} > 0 ]; then
+    for fname in ${showfiles[@]};
+    do
+	echo ${fname}
+	cat ${MEMODIR}/${fname}
+	echo
+    done
+fi
