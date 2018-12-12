@@ -97,18 +97,21 @@ if [ ! -z ${writefile} ]; then
 fi
 
 if [ ${showlist} = 1 ]; then
+    echo -e "\e[37;2m"
     echo "[memo list]"
     ls -1 ${MEMODIR}
+    echo -e "\e[m"
 fi
 
 res=$((${#showfiles[@]}-1))
 if [ ${res} -ge 0 ]; then
-    for fname in ${showfiles[@]};
+    for fname in "${showfiles[@]}";
     do
 	echo "#==============================#"
 	echo -e "\e[37;2m"
 	echo "<${fname}>"
-	if [ -e ${MEMODIR}/${fname} ]; then
+	nfiles=$((`ls ${MEMODIR}/${fname}|wc -l`-1))
+	if [ ${nfiles} -ge 0 ]; then
 	    cat ${MEMODIR}/${fname}
 	else
 	    cat ${fname}
