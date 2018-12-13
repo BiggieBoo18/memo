@@ -110,7 +110,7 @@ if [ ${res} -ge 0 ]; then
 	echo "#==============================#"
 	echo -e "\e[37;2m"
 	echo "<${fname}>"
-	nfiles=$((`ls ${MEMODIR}/${fname}|wc -l`-1))
+	nfiles=$((`ls ${MEMODIR}/${fname} 2>/dev/null|wc -l`-1))
 	if [ ${nfiles} -ge 0 ]; then
 	    cat ${MEMODIR}/${fname}
 	else
