@@ -17,8 +17,9 @@ or
 ###### NOTE:Currently emacs launches
 
 ## Show memo
-`$ memo -s <FILENAME>`  
+`$ memo -s "<FILENAME>"`  
 examples:  
-`$ memo -s example.memo`  
-`$ memo -s <MEMODIR>/example.memo`  
-`$ memo -s *.memo`
+`$ memo -s "example.memo"`  
+`$ memo -s "<MEMODIR>/example.memo"`  
+`$ memo -s "*.memo"`  
+###### NOTE:Single-quote or Double-quote is necessary
